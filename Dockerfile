@@ -5,7 +5,7 @@ WORKDIR /go/src/github.com/qosimmax/file-server-api
 ADD . .
 
 RUN make build
-#RUN make test
+RUN mkdir buckets
 
 # Create production image for application with needed files
 FROM golang:1.20.5-alpine3.18
