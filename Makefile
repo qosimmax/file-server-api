@@ -10,6 +10,7 @@ build:
 
 ## server: runs the server
 run:
+	mkdir -p buckets
 	go run ${APP_CMD_DIR}/main.go
 
 ## test: runs tests

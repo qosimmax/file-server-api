@@ -27,16 +27,18 @@ func HandleConnection(ctx context.Context, conn net.Conn) {
 }
 
 func receiveFile(ctx context.Context, conn net.Conn) {
+	// read file id
 	buf := make([]byte, 36)
 	_, _ = conn.Read(buf)
 	fileID := string(buf)
 
+	// read file size
 	buf = make([]byte, 8)
 	_, _ = conn.Read(buf)
 
 	var limit int64
 	bf := bytes.NewBuffer(buf)
-	binary.Read(bf, binary.LittleEndian, &limit)
+	_ = binary.Read(bf, binary.LittleEndian, &limit)
 
 	path := fmt.Sprintf("./buckets/%s", fileID)
 	file, err := os.Create(path)
@@ -44,7 +46,6 @@ func receiveFile(ctx context.Context, conn net.Conn) {
 		log.Println("error opening file:", err)
 		return
 	}
-
 	defer file.Close()
 
 	n, err := io.CopyN(file, conn, limit)
@@ -57,6 +58,7 @@ func receiveFile(ctx context.Context, conn net.Conn) {
 }
 
 func sendFile(ctx context.Context, conn net.Conn) {
+	// read file id
 	buf := make([]byte, 36)
 	_, _ = conn.Read(buf)
 	fileID := string(buf)
@@ -67,7 +69,6 @@ func sendFile(ctx context.Context, conn net.Conn) {
 		log.Println("error opening file:", err)
 		return
 	}
-
 	defer file.Close()
 
 	n, err := io.Copy(conn, file)
