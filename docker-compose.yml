@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  file-server-api:
+    build:
+      context: .
+    hostname: file-server-api
+    ports:
+      - "7070-7076:8000"
